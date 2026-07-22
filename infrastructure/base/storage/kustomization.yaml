@@ -5,3 +5,4 @@ resources:
   - helmrepository.yaml
   - helmrelease.yaml
   - secret.enc.yaml
+  - nfs-media-pv.yaml
