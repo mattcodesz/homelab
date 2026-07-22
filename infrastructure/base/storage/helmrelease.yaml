@@ -1,0 +1,71 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: democratic-csi-iscsi
+  namespace: democratic-csi
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: democratic-csi
+      sourceRef:
+        kind: HelmRepository
+        name: democratic-csi
+  valuesFrom:
+    - kind: Secret
+      name: democratic-csi-iscsi-secret
+      valuesKey: values.yaml
+  values:
+    csiDriver:
+      name: "org.democratic-csi.iscsi"
+
+    storageClasses:
+      - name: truenas-iscsi
+        defaultClass: false
+        reclaimPolicy: Retain
+        volumeBindingMode: Immediate
+        allowVolumeExpansion: true
+        parameters:
+          fsType: ext4
+        mountOptions: []
+        secrets:
+          provisioner-secret:
+          controller-publish-secret:
+          node-stage-secret:
+          node-publish-secret:
+          controller-expand-secret:
+
+    driver:
+      config:
+        driver: freenas-api-iscsi
+        instance_id: homelab-staging
+        httpConnection:
+          protocol: http
+          host: 192.168.1.242
+          port: 2080
+          allowInsecure: true
+          apiVersion: 2
+          # apiKey injected via valuesFrom secret above
+        zfs:
+          datasetParentName: tank/clusterdata/vols
+          detachedSnapshotsDatasetParentName: tank/clusterdata/snaps
+          zvolCompression:
+          zvolDedup:
+          zvolEnableReservation: false
+          zvolBlocksize:
+        iscsi:
+          targetPortal: "192.168.1.242:3260"
+          targetPortals: []
+          interface:
+          namePrefix: csi-
+          nameSuffix: "-staging"
+          targetGroups:
+            - targetGroupPortalGroup: 1
+              targetGroupInitiatorGroup: 1
+              targetGroupAuthType: None
+          extentInsecureTpc: true
+          extentXenCompat: false
+          extentDisablePhysicalBlocksize: true
+          extentBlocksize: 512
+          extentRpm: "SSD"
+          extentAvailThreshold: 0
