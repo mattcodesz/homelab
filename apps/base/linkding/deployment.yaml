@@ -60,6 +60,29 @@ spec:
             limits:
               cpu: 500m
               memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          startupProbe:
+            httpGet:
+              path: /
+              port: 9090
+            failureThreshold: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 9090
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 9090
+            periodSeconds: 30
           volumeMounts:
             - name: data
               mountPath: /etc/linkding/data
