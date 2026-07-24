@@ -65,6 +65,10 @@ spec:
             capabilities:
               drop:
                 - ALL
+              add:
+                - CHOWN
+                - SETGID
+                - SETUID
             seccompProfile:
               type: RuntimeDefault
           startupProbe:

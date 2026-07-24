@@ -17,6 +17,7 @@ The current cluster keeps PostgreSQL data on Kubernetes `local-path` storage. Tr
 - All Helm releases have explicit chart versions.
 - Jellyfin, Linkding, and cloudflared have startup/readiness/liveness checks.
 - Application containers use restricted capabilities and the RuntimeDefault seccomp profile.
+- Linkding retains only `CHOWN`, `SETGID`, and `SETUID`, which its entrypoint requires to initialize the data volume and drop to its web-process user.
 - cloudflared has two replicas, topology spreading, and a disruption budget.
 - The Linkding database uses required CloudNativePG pod anti-affinity across `kubernetes.io/hostname`.
 - The infrastructure Flux Kustomization health-checks MetalLB, democratic-csi, Traefik, and CloudNativePG before the apps layer proceeds.
