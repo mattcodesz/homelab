@@ -22,6 +22,8 @@ spec:
             - secretRef:
                 name: linkding-superuser
           env:
+            - name: LD_CSRF_TRUSTED_ORIGINS
+              value: "https://linkding.rickweb.net"
             - name: LD_DB_ENGINE
               value: postgres
             - name: LD_DB_DATABASE
